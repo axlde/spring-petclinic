@@ -1,27 +1,11 @@
-- name: Login to Artifactory Docker registry
-        uses: docker/login-action@v3
-        with:
-          registry: axde.jfrog.io
-          username: ${{ secrets.JFROG_USER }}
-          password: ${{ secrets.JFROG_TOKEN }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: |
-            axde.jfrog.io/docker-local/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-            axde.jfrog.io/docker-local/${{ env.IMAGE_NAME }}:latestname: CI Pipeline - Spring PetClinic + JFrog
+cat > .github/workflows/ci-pipeline.yml << 'EOF'
+name: CI Pipeline - Spring PetClinic + JFrog
 
 on:
   push:
     branches: [main]
 
 env:
-  JFROG_URL: ${{ secrets.JFROG_URL }}
-  JFROG_USER: ${{ secrets.JFROG_USER }}
-  JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
   IMAGE_NAME: spring-petclinic
   IMAGE_TAG: ${{ github.sha }}
 
@@ -43,7 +27,7 @@ jobs:
       - name: Configure Maven to use Artifactory
         run: |
           mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml <<EOF
+          cat > ~/.m2/settings.xml <<MAVENEOF
           <settings>
             <servers>
               <server>
@@ -60,7 +44,7 @@ jobs:
               </mirror>
             </mirrors>
           </settings>
-          EOF
+          MAVENEOF
 
       - name: Compile
         run: ./mvnw compile -q
@@ -80,30 +64,4 @@ jobs:
   docker-build:
     name: Build & Push Docker Image
     needs: build-and-test
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download JAR
-        uses: actions/download-artifact@v4
-        with:
-          name: petclinic-jar
-          path: target/
-
-      - name: Login to Artifactory Docker registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ secrets.JFROG_URL }}
-          username: ${{ secrets.JFROG_USER }}
-          password: ${{ secrets.JFROG_TOKEN }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: |
-            ${{ secrets.JFROG_URL }}/docker-local/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-            ${{ secrets.JFROG_URL }}/docker-local/${{ env.IMAGE_NAME }}:latest
+    run
