@@ -88,3 +88,20 @@ jobs:
           tags: |
             axde.jfrog.io/docker-local/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             axde.jfrog.io/docker-local/${{ env.IMAGE_NAME }}:latest
+
+xray-scan:
+    name: Xray Security Scan
+    needs: docker-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ secrets.JFROG_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }}
+
+      - name: Run Xray scan
+        run: |
+          jf docker scan axde.jfrog.io/docker-local/spring-petclinic:latest \
+            --fail \
+            --format=table
