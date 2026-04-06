@@ -89,7 +89,7 @@ jobs:
             axde.jfrog.io/docker-local/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             axde.jfrog.io/docker-local/${{ env.IMAGE_NAME }}:latest
 
-xray-scan:
+  xray-scan:
     name: Xray Security Scan
     needs: docker-build
     runs-on: ubuntu-latest
