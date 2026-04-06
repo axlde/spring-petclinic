@@ -89,11 +89,18 @@ jobs:
             axde.jfrog.io/docker-local/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             axde.jfrog.io/docker-local/${{ env.IMAGE_NAME }}:latest
 
-  xray-scan:
+xray-scan:
     name: Xray Security Scan
     needs: docker-build
     runs-on: ubuntu-latest
     steps:
+      - name: Login to Artifactory Docker registry
+        uses: docker/login-action@v3
+        with:
+          registry: axde.jfrog.io
+          username: ${{ secrets.JFROG_USER }}
+          password: ${{ secrets.JFROG_TOKEN }}
+
       - name: Setup JFrog CLI
         uses: jfrog/setup-jfrog-cli@v4
         env:
