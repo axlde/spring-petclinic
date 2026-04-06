@@ -107,6 +107,9 @@ jobs:
           JF_URL: ${{ secrets.JFROG_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }}
 
+      - name: Pull image from Artifactory
+        run: docker pull axde.jfrog.io/docker-local/spring-petclinic:latest
+
       - name: Run Xray scan
         run: |
           jf docker scan axde.jfrog.io/docker-local/spring-petclinic:latest \
