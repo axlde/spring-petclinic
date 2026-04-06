@@ -1,4 +1,3 @@
-cat > .github/workflows/ci-pipeline.yml << 'EOF'
 name: CI Pipeline - Spring PetClinic + JFrog
 
 on:
