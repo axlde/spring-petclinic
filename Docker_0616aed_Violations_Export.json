@@ -1,0 +1,244 @@
+[
+   {
+      "user_issue_id": "2041251244399513600",
+      "comp_id": "docker://spring-petclinic:latest",
+      "component_package_type": "docker",
+      "comp_name": "spring-petclinic",
+      "comp_version": "latest",
+      "type": "security",
+      "targets": null,
+      "issue_id": "XRAY-954614",
+      "paths": [
+         "default/docker-local/spring-petclinic/latest/manifest.json"
+      ],
+      "watcher_id": "8cf963dc9011daebe30f4703",
+      "watcher_name": "docker-local-watch",
+      "matched_policies": [
+         {
+            "policy": "block-critical-vulnerabilities",
+            "rule": "block-critical-high",
+            "is_blocking": true,
+            "blocking_mask": 0,
+            "is_skip_not_applicable": false
+         }
+      ],
+      "summary": "Spring Boot applications with Actuator can be vulnerable to an \"Authentication Bypass\" vulnerability when an application endpoint that requires authentication is declared under the path used by the CloudFoundry Actuator endpoints. This issue affects Spring Security: from 4.0.0 through 4.0.3, from 3.5.0 through 3.5.11, from 3.4.0 through 3.4.14, from 3.3.0 through 3.3.17, from 2.7.0 through 2.7.31.",
+      "severity": "High",
+      "updated": "2026-04-06T20:26:35Z",
+      "permissions": {},
+      "is_source_root": false,
+      "is_high_profile": false,
+      "applicability_detail": {
+         "component_id": "docker://spring-petclinic:latest",
+         "source_comp_id": "",
+         "vulnerability_id": "CVE-2026-22733",
+         "result": "not_covered",
+         "transitive_status": "scanned"
+      },
+      "is_exposures_issue": false,
+      "is_package_issue": false,
+      "source": "org.springframework.boot:spring-boot-starter-actuator",
+      "source_version": "4.0.3",
+      "source_id": "gav://org.springframework.boot:spring-boot-starter-actuator",
+      "component_physical_paths": [
+         "sha256__c7b1d4fd418e2f59691446162d9e82dd6cf367b38b971a5c28b829e839138aef.tar.gz/app/app.jar/META-INF/sbom/application.cdx.json/org.springframework.samples:spring-petclinic:4.0.0-SNAPSHOT/gav:/org.springframework.boot:spring-boot-starter-actuator:4.0.3/org.springframework.boot:spring-boot-starter-actuator:4.0.3"
+      ]
+   },
+   {
+      "user_issue_id": "2041251244382736384",
+      "comp_id": "docker://spring-petclinic:latest",
+      "component_package_type": "docker",
+      "comp_name": "spring-petclinic",
+      "comp_version": "latest",
+      "type": "security",
+      "targets": null,
+      "issue_id": "XRAY-954613",
+      "paths": [
+         "default/docker-local/spring-petclinic/latest/manifest.json"
+      ],
+      "watcher_id": "8cf963dc9011daebe30f4703",
+      "watcher_name": "docker-local-watch",
+      "matched_policies": [
+         {
+            "policy": "block-critical-vulnerabilities",
+            "rule": "block-critical-high",
+            "is_blocking": true,
+            "blocking_mask": 0,
+            "is_skip_not_applicable": false
+         }
+      ],
+      "summary": "Spring Boot applications with Actuator can be vulnerable to an \"Authentication Bypass\" vulnerability when an application endpoint that requires authentication is declared under a specific path, already configured for a Health Group additional path.\nThis issue affects Spring Boot: from 4.0 before 4.0.3, from 3.5 before 3.5.11, from 3.4 before 3.4.15.\nThis CVE is similar but not equivalent to CVE-2026-22733, as the conditions for exploit and vulnerable versions are different.",
+      "severity": "High",
+      "updated": "2026-04-06T20:26:35Z",
+      "permissions": {},
+      "is_source_root": false,
+      "is_high_profile": false,
+      "applicability_detail": {
+         "component_id": "docker://spring-petclinic:latest",
+         "source_comp_id": "",
+         "vulnerability_id": "CVE-2026-22731",
+         "result": "not_covered",
+         "transitive_status": "scanned"
+      },
+      "is_exposures_issue": false,
+      "is_package_issue": false,
+      "source": "org.springframework.boot:spring-boot-starter-actuator",
+      "source_version": "4.0.3",
+      "source_id": "gav://org.springframework.boot:spring-boot-starter-actuator",
+      "component_physical_paths": [
+         "sha256__c7b1d4fd418e2f59691446162d9e82dd6cf367b38b971a5c28b829e839138aef.tar.gz/app/app.jar/META-INF/sbom/application.cdx.json/org.springframework.samples:spring-petclinic:4.0.0-SNAPSHOT/gav:/org.springframework.boot:spring-boot-starter-actuator:4.0.3/org.springframework.boot:spring-boot-starter-actuator:4.0.3"
+      ]
+   },
+   {
+      "user_issue_id": "2041251244365959168",
+      "comp_id": "docker://spring-petclinic:latest",
+      "component_package_type": "docker",
+      "comp_name": "spring-petclinic",
+      "comp_version": "latest",
+      "type": "security",
+      "targets": null,
+      "issue_id": "XRAY-948994",
+      "paths": [
+         "default/docker-local/spring-petclinic/latest/manifest.json"
+      ],
+      "watcher_id": "8cf963dc9011daebe30f4703",
+      "watcher_name": "docker-local-watch",
+      "matched_policies": [
+         {
+            "policy": "block-critical-vulnerabilities",
+            "rule": "block-critical-high",
+            "is_blocking": true,
+            "blocking_mask": 0,
+            "is_skip_not_applicable": false
+         }
+      ],
+      "summary": "jackson-core contains core low-level incremental (\"streaming\") parser and generator abstractions used by Jackson Data Processor. From version 3.0.0 to before version 3.1.0, the UTF8DataInputJsonParser, which is used when parsing from a java.io.DataInput source, bypasses the maxNestingDepth constraint (default: 500) defined in StreamReadConstraints. A similar issue was found in ReaderBasedJsonParser. This allows a user to supply a JSON document with excessive nesting, which can cause a StackOverflowError when the structure is processed, leading to a Denial of Service (DoS). This issue has been patched in version 3.1.0.",
+      "severity": "High",
+      "updated": "2026-04-06T20:26:35Z",
+      "permissions": {},
+      "is_source_root": false,
+      "is_high_profile": true,
+      "high_profile_info": {
+         "id": 0,
+         "PublicVulnsTblID": 0,
+         "VulnId": "XRAY-948994",
+         "VulnerabilityTitle": "",
+         "ShortDescription": "Stack exhaustion in jackson-core may lead to denial of service when parsing crafted JSON data with excessive nesting.",
+         "FullDescription": "[jackson-core](https://github.com/FasterXML/jackson-core) is a core library for Jackson that provides low-level streaming JSON input/output functionality.\n",
+         "Impact": 5,
+         "VulnerabilityType": "Denial of service",
+         "Resolution": "",
+         "ExtendedImpactReasons": [
+            {
+               "id": 0,
+               "PublicVulnsExtendedTblId": 0,
+               "Name": "Exploitation of the issue is only possible when the vulnerable component is used in a specific manner. The attacker has to perform per-target research to determine the vulnerable attack vector",
+               "Description": "Exploitation requires the application to parse an untrusted JSON document with excessive nesting, specifically - by loading the untrusted data into the `UTF8DataInputJsonParser` or `ReaderBasedJsonParser` classes.",
+               "IsPositive": 1,
+               "InsertOrder": 1
+            },
+            {
+               "id": 0,
+               "PublicVulnsExtendedTblId": 0,
+               "Name": "The issue is trivial to exploit and does not require a published writeup or PoC",
+               "Description": "The attacker can simply supply a deeply-nested JSON object in order to trigger the vulnerability",
+               "IsPositive": 0,
+               "InsertOrder": 2
+            }
+         ],
+         "ExtendedReferences": [
+            {
+               "id": 0,
+               "PublicVulnsExtendedTblId": 0,
+               "RefType": "Advisory",
+               "Title": "Published Advisory",
+               "Url": "https://github.com/FasterXML/jackson-core/security/advisories/GHSA-6v53-7c9g-w56r",
+               "InsertOrder": 1
+            },
+            {
+               "id": 0,
+               "PublicVulnsExtendedTblId": 0,
+               "RefType": "Patch",
+               "Title": "Fix Commit",
+               "Url": "https://github.com/FasterXML/jackson-core/commit/8b25fd67f20583e75fb09564ce1eaab06cd5a902",
+               "InsertOrder": 2
+            }
+         ],
+         "ExtendedRelatedVulns": null
+      },
+      "cve_applicability_info": {
+         "scanner_available": true,
+         "component_id": "docker://spring-petclinic:latest",
+         "source_comp_id": "gav://tools.jackson.core:jackson-core:3.0.4",
+         "cve_id": "CVE-2026-29062",
+         "scan_status": 1,
+         "applicability": false,
+         "evidence": null,
+         "info": "The vulnerable jackson-core functions are never called",
+         "transitive_status": "not_scanned",
+         "details": null
+      },
+      "applicability_detail": {
+         "component_id": "docker://spring-petclinic:latest",
+         "source_comp_id": "gav://tools.jackson.core:jackson-core:3.0.4",
+         "vulnerability_id": "CVE-2026-29062",
+         "result": "not_applicable",
+         "transitive_status": "not_scanned"
+      },
+      "is_exposures_issue": false,
+      "is_package_issue": false,
+      "source": "tools.jackson.core:jackson-core",
+      "source_version": "3.0.4",
+      "source_id": "gav://tools.jackson.core:jackson-core",
+      "component_physical_paths": [
+         "sha256__c7b1d4fd418e2f59691446162d9e82dd6cf367b38b971a5c28b829e839138aef.tar.gz/app/app.jar/META-INF/sbom/application.cdx.json/org.springframework.samples:spring-petclinic:4.0.0-SNAPSHOT/gav:/tools.jackson.core:jackson-core:3.0.4/tools.jackson.core:jackson-core:3.0.4",
+         "sha256__c7b1d4fd418e2f59691446162d9e82dd6cf367b38b971a5c28b829e839138aef.tar.gz/app/app.jar/BOOT-INF/lib/jackson-core-3.0.4.jar"
+      ]
+   },
+   {
+      "user_issue_id": "2041251244349181952",
+      "comp_id": "docker://spring-petclinic:latest",
+      "component_package_type": "docker",
+      "comp_name": "spring-petclinic",
+      "comp_version": "latest",
+      "type": "security",
+      "targets": null,
+      "issue_id": "XRAY-960859",
+      "paths": [
+         "default/docker-local/spring-petclinic/latest/manifest.json"
+      ],
+      "watcher_id": "8cf963dc9011daebe30f4703",
+      "watcher_name": "docker-local-watch",
+      "matched_policies": [
+         {
+            "policy": "block-critical-vulnerabilities",
+            "rule": "block-critical-high",
+            "is_blocking": true,
+            "blocking_mask": 0,
+            "is_skip_not_applicable": false
+         }
+      ],
+      "summary": "Jackson Core: Document length constraint bypass in blocking, async, and DataInput parsers",
+      "severity": "High",
+      "updated": "2026-04-06T20:26:35Z",
+      "permissions": {},
+      "is_source_root": false,
+      "is_high_profile": false,
+      "applicability_detail": {
+         "component_id": "docker://spring-petclinic:latest",
+         "source_comp_id": "",
+         "vulnerability_id": "XRAY-960859",
+         "result": "not_covered",
+         "transitive_status": "scanned"
+      },
+      "is_exposures_issue": false,
+      "is_package_issue": false,
+      "source": "tools.jackson.core:jackson-core",
+      "source_version": "3.0.4",
+      "source_id": "gav://tools.jackson.core:jackson-core",
+      "component_physical_paths": [
+         "sha256__c7b1d4fd418e2f59691446162d9e82dd6cf367b38b971a5c28b829e839138aef.tar.gz/app/app.jar/META-INF/sbom/application.cdx.json/org.springframework.samples:spring-petclinic:4.0.0-SNAPSHOT/gav:/tools.jackson.core:jackson-core:3.0.4/tools.jackson.core:jackson-core:3.0.4",
+         "sha256__c7b1d4fd418e2f59691446162d9e82dd6cf367b38b971a5c28b829e839138aef.tar.gz/app/app.jar/BOOT-INF/lib/jackson-core-3.0.4.jar"
+      ]
+   }
+]
