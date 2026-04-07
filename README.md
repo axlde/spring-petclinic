@@ -9,15 +9,15 @@ A production-grade CI/CD pipeline demonstrating DevSecOps best practices using *
 
 ## What This Demonstrates
 
-| Requirement | Implementation |
-|---|---|
-| Compile the code | `./mvnw compile` via GitHub Actions |
-| Run the tests | `./mvnw test` — JUnit, all passing |
-| Package as runnable Docker image | Multi-stage Dockerfile, pushed to Artifactory |
-| Secure dependency resolution | All Maven deps routed through Artifactory `libs-virtual` — zero direct internet |
-| Repository management best practices | Local + Remote + Virtual repos, promotion workflow |
-| Quality gates (bonus) | Xray policy blocks on High/Critical CVEs |
-| Traceability & auditability (bonus) | Build info linked to Git SHA, branch, pipeline run |
+| Requirement                          | Implementation                                                                  |
+| ------------------------------------ | ------------------------------------------------------------------------------- |
+| Compile the code                     | `./mvnw compile` via GitHub Actions                                             |
+| Run the tests                        | `./mvnw test` — JUnit, all passing                                              |
+| Package as runnable Docker image     | Multi-stage Dockerfile, pushed to Artifactory                                   |
+| Secure dependency resolution         | All Maven deps routed through Artifactory `libs-virtual` — zero direct internet |
+| Repository management best practices | Local + Remote + Virtual repos, promotion workflow                              |
+| Quality gates (bonus)                | Xray policy blocks on High/Critical CVEs                                        |
+| Traceability & auditability (bonus)  | Build info linked to Git SHA, branch, pipeline run                              |
 
 ---
 
@@ -37,8 +37,8 @@ GitHub Actions (ubuntu-latest)
                  ↓
 ┌─────────────────────────────────────────┐
 │  Job 2: Docker Build & Push             │
-│  Multi-stage build (JDK → JRE)         │
-│  Push to axde.jfrog.io/docker-local    │
+│  Multi-stage build (JDK → JRE)          │
+│  Push to axde.jfrog.io/docker-local     │
 └────────────────┬────────────────────────┘
                  ↓
 ┌─────────────────────────────────────────┐
@@ -63,13 +63,13 @@ Block + Alert   Promote to docker-prod
 
 ### Repositories Created in Artifactory
 
-| Repository Key | Type | Package | Purpose |
-|---|---|---|---|
-| `libs-release-local` | Local | Maven | Published JARs |
-| `maven-remote` | Remote | Maven | Proxy → Maven Central |
-| `libs-virtual` | Virtual | Maven | Single resolver URL for builds |
-| `docker-local` | Local | Docker | Dev/staging images post-build |
-| `docker-prod` | Local | Docker | Promoted production images |
+| Repository Key       | Type    | Package | Purpose                        |
+| -------------------- | ------- | ------- | ------------------------------ |
+| `libs-release-local` | Local   | Maven   | Published JARs                 |
+| `maven-remote`       | Remote  | Maven   | Proxy → Maven Central          |
+| `libs-virtual`       | Virtual | Maven   | Single resolver URL for builds |
+| `docker-local`       | Local   | Docker  | Dev/staging images post-build  |
+| `docker-prod`        | Local   | Docker  | Promoted production images     |
 
 ### Why Virtual Repositories?
 
@@ -80,6 +80,7 @@ https://axde.jfrog.io/artifactory/libs-virtual
 ```
 
 This virtual repo aggregates `libs-release-local` (local artifacts) and `maven-remote` (proxied Maven Central). Benefits:
+
 - Builds never touch the internet directly
 - If Maven Central goes down, builds still work (cached)
 - Full audit trail of every dependency ever downloaded
@@ -96,12 +97,12 @@ This virtual repo aggregates `libs-release-local` (local artifacts) and `maven-r
 
 ## Prerequisites
 
-| Tool | Version |
-|---|---|
-| Java | 21 (Temurin) |
-| Maven | Wrapper included (`./mvnw`) |
-| Docker | 24+ |
-| JFrog Platform | Trial or Enterprise |
+| Tool           | Version                     |
+| -------------- | --------------------------- |
+| Java           | 21 (Temurin)                |
+| Maven          | Wrapper included (`./mvnw`) |
+| Docker         | 24+                         |
+| JFrog Platform | Trial or Enterprise         |
 
 ---
 
@@ -138,6 +139,7 @@ USER appuser
 ```
 
 Key security decisions:
+
 - **Multi-stage**: Final image has no JDK, no build tools, no source code — attack surface minimised
 - **Non-root user**: Container cannot write to system paths even if compromised
 - **JRE only**: ~200MB smaller than JDK image
@@ -153,19 +155,19 @@ The pipeline triggers automatically on every push to `main`.
 
 Add these in `Settings → Secrets and variables → Actions`:
 
-| Secret | Value |
-|---|---|
-| `JFROG_URL` | `https://axde.jfrog.io` |
-| `JFROG_USER` | your JFrog email |
+| Secret        | Value                     |
+| ------------- | ------------------------- |
+| `JFROG_URL`   | `https://axde.jfrog.io`   |
+| `JFROG_USER`  | your JFrog email          |
 | `JFROG_TOKEN` | your JFrog identity token |
 
 ### Pipeline Jobs
 
-| Job | What it does |
-|---|---|
+| Job              | What it does                                                       |
+| ---------------- | ------------------------------------------------------------------ |
 | `build-and-test` | Configures Maven to use Artifactory, compiles, tests, packages JAR |
-| `docker-build` | Builds multi-stage Docker image, pushes to `docker-local` |
-| `xray-scan` | Pulls image, runs Xray scan, fails build on policy violation |
+| `docker-build`   | Builds multi-stage Docker image, pushes to `docker-local`          |
+| `xray-scan`      | Pulls image, runs Xray scan, fails build on policy violation       |
 
 ---
 
@@ -222,23 +224,23 @@ kubectl port-forward svc/spring-petclinic 8080:80 -n petclinic
 
 Real scan results from `spring-petclinic:latest` scanned on 06 Apr 2026:
 
-| Severity | Count | Applicable |
-|---|---|---|
-| Critical | 0 | 0 |
-| High | 4 | 0 |
-| Medium | 6 | — |
-| Low | 10 | — |
-| **Total** | **20** | **0** |
+| Severity  | Count  | Applicable |
+| --------- | ------ | ---------- |
+| Critical  | 0      | 0          |
+| High      | 4      | 0          |
+| Medium    | 6      | —          |
+| Low       | 10     | —          |
+| **Total** | **20** | **0**      |
 
 **Key finding**: Xray contextual analysis confirmed that none of the 4 High CVEs are reachable in our code — eliminating false positives that would waste developer time.
 
 The full JSON export is available in the `xray-results/` folder in this repo:
 
-| File | Contents |
-|---|---|
-| `Docker_0616aed_Security_Export.json` | Full CVE details, severity, affected packages |
-| `Docker_0616aed_Violations_Export.json` | Policy violations against `block-critical-vulnerabilities` |
-| `Docker_0616aed_Scan_Status_Export.json` | Overall scan status and component summary |
+| File                                     | Contents                                                   |
+| ---------------------------------------- | ---------------------------------------------------------- |
+| `Docker_0616aed_Security_Export.json`    | Full CVE details, severity, affected packages              |
+| `Docker_0616aed_Violations_Export.json`  | Policy violations against `block-critical-vulnerabilities` |
+| `Docker_0616aed_Scan_Status_Export.json` | Overall scan status and component summary                  |
 
 ---
 
