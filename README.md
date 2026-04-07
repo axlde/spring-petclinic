@@ -47,7 +47,14 @@ GitHub Actions (ubuntu-latest)
 │  Blocks pipeline on High/Critical CVEs  │
 │  Results: 20 CVEs, 0 Critical,          │
 │           0 Applicable (contextual)     │
-└─────────────────────────────────────────┘
+└────────────────┬────────────────────────┘
+                 ↓
+    JFrog Xray Scan (Quality Gate)
+      CVE  │  Secrets  │  Licenses
+           │
+┌──────────┴──────────┐
+▼                     ▼
+Block + Alert   Promote to docker-prod
 ```
 
 ---
@@ -95,6 +102,46 @@ This virtual repo aggregates `libs-release-local` (local artifacts) and `maven-r
 | Maven | Wrapper included (`./mvnw`) |
 | Docker | 24+ |
 | JFrog Platform | Trial or Enterprise |
+
+---
+
+## How Secure Dependency Resolution Works
+
+When GitHub Actions runs the pipeline, it creates a `~/.m2/settings.xml` on the runner that mirrors ALL Maven requests to Artifactory:
+
+```xml
+<mirrors>
+  <mirror>
+    <id>jfrog-artifactory</id>
+    <mirrorOf>*</mirrorOf>
+    <url>https://axde.jfrog.io/artifactory/libs-virtual</url>
+  </mirror>
+</mirrors>
+```
+
+The `mirrorOf: *` means every dependency request — including transitive dependencies — goes through Artifactory. The runner never contacts Maven Central directly. Artifactory fetches it once, caches it in `maven-remote`, and serves it on every subsequent build instantly.
+
+---
+
+## Dockerfile Explained
+
+```dockerfile
+# Stage 1: Build — JDK needed to compile
+FROM eclipse-temurin:21-jdk-jammy AS build
+# compiles and packages the JAR
+
+# Stage 2: Runtime — only JRE needed to run
+FROM eclipse-temurin:21-jre-jammy AS runtime
+# Non-root user for least privilege
+RUN groupadd --system appgroup && useradd --system --gid appgroup appuser
+USER appuser
+```
+
+Key security decisions:
+- **Multi-stage**: Final image has no JDK, no build tools, no source code — attack surface minimised
+- **Non-root user**: Container cannot write to system paths even if compromised
+- **JRE only**: ~200MB smaller than JDK image
+- **Health check**: Kubernetes and Docker know when app is ready via `/actuator/health`
 
 ---
 
@@ -185,7 +232,13 @@ Real scan results from `spring-petclinic:latest` scanned on 06 Apr 2026:
 
 **Key finding**: Xray contextual analysis confirmed that none of the 4 High CVEs are reachable in our code — eliminating false positives that would waste developer time.
 
-The full JSON export is available as a GitHub Actions artifact on every pipeline run under the `xray-scan` job.
+The full JSON export is available in the `xray-results/` folder in this repo:
+
+| File | Contents |
+|---|---|
+| `Docker_0616aed_Security_Export.json` | Full CVE details, severity, affected packages |
+| `Docker_0616aed_Violations_Export.json` | Policy violations against `block-critical-vulnerabilities` |
+| `Docker_0616aed_Scan_Status_Export.json` | Overall scan status and component summary |
 
 ---
 
@@ -212,6 +265,10 @@ spring-petclinic/
 ├── .github/
 │   └── workflows/
 │       └── ci-pipeline.yml     # GitHub Actions pipeline
+├── xray-results/               # Xray scan JSON exports (bonus deliverable)
+│   ├── Docker_0616aed_Security_Export.json
+│   ├── Docker_0616aed_Violations_Export.json
+│   └── Docker_0616aed_Scan_Status_Export.json
 ├── src/                        # Spring PetClinic source code
 ├── Dockerfile                  # Multi-stage hardened Docker image
 ├── k8s-deployment.yaml         # Kubernetes deployment + service
